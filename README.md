@@ -4,15 +4,20 @@ A browser game for the NASA Space Apps Challenge 2026, challenge "Space Mission 
 
 Team: Tar Solo (one human and one AI assistant, Claude Code).
 
-## Play
+## Play online
 
-The game is a set of static files. Serve the project folder with any static web server and open the page:
+After GitHub Pages is switched on, the game opens at `https://z-shark.github.io/mission-mars/`.
 
-```
-python -m http.server 8765
-```
+## Download and run locally
 
-Then open `http://localhost:8765/src/index.html`.
+You need a web browser and either Git or a ZIP download. The game is a set of static files, so no installation or build step is needed. A small local web server is required because the browser blocks loading data files from a plain file path.
+
+1. Get the files: either `git clone https://github.com/z-shark/mission-mars.git` or press the green Code button on the GitHub page and choose Download ZIP, then unpack it.
+2. Open a terminal in the project folder.
+3. Start any static web server. With Python 3: `python -m http.server 8765`. With Node.js: `npx serve -l 8765`.
+4. Open `http://localhost:8765/` in a browser.
+
+To run the tests you need Node.js 20 or newer: `node --test tests/`.
 
 ## Levels
 
@@ -43,6 +48,7 @@ Spacecraft masses, costs, budgets, requirement thresholds and the probabilities 
 ## Project layout
 
 ```
+index.html      redirect to src/index.html
 src/            page, styles and JavaScript modules
 src/js/         model (rules), physics, transfer solver, texts, glossary, UI
 data/           sourced parameters, game assumptions, Earth-Mars table, solar activity table (not used yet)
@@ -60,6 +66,10 @@ node --test tests/
 ## Rebuilding the data tables
 
 `scripts/fetch_horizons.py` downloads the positions of Earth and Mars from the JPL Horizons service and writes `data/earth_mars_range.json`. `scripts/build_solar_table.py` turns the NASA Marshall sunspot forecast into `data/solar_activity.json`; the game does not use that file yet.
+
+## Licence
+
+The code and texts are released under the MIT licence (see `LICENSE`). NASA data in `data/` are public data from the cited sources and are not covered by this licence; see `docs/SOURCES.md`.
 
 ## Use of AI
 
