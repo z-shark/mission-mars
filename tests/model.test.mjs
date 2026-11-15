@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { createContext, defaultState, evaluate, runMission, stars, vehicleOptions, missionProgress, seededRng, monteCarlo, missionsFor } from "../src/js/model.js";
+import { createContext, defaultState, evaluate, runMission, stars, vehicleOptions, missionProgress, seededRng, monteCarlo, missionsFor, minPropellantKg, rollRisk } from "../src/js/model.js";
 
 const read = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
 const ctx = createContext(read("../data/mission_params.json"), read("../data/game_assumptions.json"), read("../data/earth_mars_range.json"));
@@ -277,4 +277,34 @@ test("link budget chain adds up", () => {
   const l = evaluate(s, ctx).values.link;
   assert.ok(Math.abs(l.prN0DbHz - l.rateDbHz - 2) < 1e-6);
   assert.ok(Math.abs(l.eirpDbw - (l.txPowerDbw + l.txGainDb)) < 1e-9);
+});
+
+test("minimum propellant by bisection matches a linear scan", () => {
+  for (const profile of ["engineer", "analyst"]) {
+    const s = { ...defaultState(profile), launchDate: "2028-12-06", instruments: ["camera"] };
+    let linear = null;
+    for (let kg = 0; kg <= 300; kg += 1) {
+      const dv = evaluate({ ...s, propellantKg: kg }, ctx).checks.find((c) => c.id === "dv");
+      if (dv && dv.status !== "fail") {
+        linear = kg;
+        break;
+      }
+    }
+    assert.equal(minPropellantKg(s, ctx), linear);
+  }
+});
+
+test("an empty launch date gives a failed design instead of NaN values", () => {
+  const e = evaluate({ ...defaultState("engineer"), launchDate: "" }, ctx);
+  assert.equal(e.ok, false);
+});
+
+test("a navigation surprise that exceeds the reserve marks the evaluation as not ok", () => {
+  const s = { ...defaultState("analyst"), missionId: "mapper", duration: "medium", instruments: ["camera"], launchDate: "2028-10-15", arrayAreaM2: 0.5, periapsisKm: 150, apoapsisKm: 8000, band: "x_band", dishM: 1, txPowerW: 4, propellantKg: 26 };
+  const e = evaluate(s, ctx);
+  assert.equal(e.ok, true);
+  const rolls = [0, 0.99];
+  const risk = rollRisk(e, ctx, () => rolls.shift() ?? 1);
+  assert.ok(risk.early.some((x) => x.outcome === "lost"));
+  assert.equal(risk.evaluation.ok, false);
 });

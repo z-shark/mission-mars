@@ -51,12 +51,20 @@ export function findBestLaunchMs(ctx, range) {
 }
 
 export function minPropellantKg(state, ctx) {
-  for (let kg = 0; kg <= 300; kg += 1) {
-    const e = evaluate({ ...state, propellantKg: kg }, ctx);
-    const dv = e.checks.find((c) => c.id === "dv");
-    if (dv && dv.status !== "fail") return kg;
+  const enough = (kg) => {
+    const dv = evaluate({ ...state, propellantKg: kg }, ctx).checks.find((c) => c.id === "dv");
+    return Boolean(dv) && dv.status !== "fail";
+  };
+  let hi = state.profile === "engineer" || state.profile === "analyst" ? 300 : 200;
+  if (!enough(hi)) return null;
+  let lo = 0;
+  if (enough(lo)) return 0;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) >> 1;
+    if (enough(mid)) hi = mid;
+    else lo = mid;
   }
-  return null;
+  return hi;
 }
 
 export function launchEnergyCurve(ctx, stepDays = 10) {
@@ -180,13 +188,16 @@ export function evaluate(state, ctx) {
   const propellantKg = Math.min(state.propellantKg, engine.maxPropellantKg);
   const arrayAreaM2 = custom ? state.arrayAreaM2 : 1.0;
   const carriedKg = allMissions(a).find((m) => m.id === state.missionId)?.fixed_payload_kg ?? 0;
+  const dishKg = state.profile === "analyst" ? (a.link.dishes.find((x) => x.diameter_m === state.dishM)?.mass_kg ?? 0) : 0;
   const dryKg =
-    carriedKg + (state.profile === "analyst" ? (a.link.dishes.find((x) => x.diameter_m === state.dishM)?.mass_kg ?? 0) : 0) + a.spacecraft.bus_dry_kg + instrument.mass_kg + engine.systemDryKg + (custom ? arrayAreaM2 * a.spacecraft.array_mass_kg_per_m2 : 0);
+    carriedKg + dishKg + a.spacecraft.bus_dry_kg + instrument.mass_kg + engine.systemDryKg + (custom ? arrayAreaM2 * a.spacecraft.array_mass_kg_per_m2 : 0);
   const wetKg = dryKg + propellantKg;
   const dvAvailMs = rocketDeltaVMs(engine.ispS, wetKg, dryKg);
 
   const values = {
     dryKg,
+    carriedKg,
+    dishKg,
     wetKg,
     propellantKg,
     dvAvailMs,
@@ -377,8 +388,8 @@ export function evaluate(state, ctx) {
   if (isEngineer) {
     if (ctx.bestC3 === undefined) {
       const curve = launchEnergyCurve(ctx, 10).map((x) => x.c3);
-      ctx.bestC3 = Math.min(...curve);
-      ctx.worstC3 = Math.max(...curve);
+      ctx.bestC3 = curve.length ? Math.min(...curve) : plan.c3Km2S2;
+      ctx.worstC3 = curve.length ? Math.max(...curve) : plan.c3Km2S2;
     }
     const c3Ratio = plan.c3Km2S2 / ctx.bestC3;
     const energyWarn = vehicle.publishedC3 !== null && plan.c3Km2S2 > vehicle.publishedC3;
@@ -404,7 +415,7 @@ export function evaluate(state, ctx) {
     checks.push({
       id: "data",
       label: "Enough data link capacity",
-      status: link.capacityGbit >= link.generatedGbit ? (link.margin < 0.2 ? "warn" : "pass") : "warn",
+      status: link.capacityGbit >= link.generatedGbit && link.margin >= 0.2 ? "pass" : "warn",
       detail: `The radio link can return ${link.capacityGbit.toFixed(2)} Gbit; the instruments produce ${link.generatedGbit.toFixed(2)} Gbit.`,
       term: "link-budget",
     });
@@ -473,11 +484,13 @@ export function rollRisk(evaluation, ctx, rng = () => 1) {
   const v = { ...evaluation.values };
   const early = [];
   const late = [];
+  let navLost = false;
   if (rng() < r.nav_probability) {
     const extra = rng() * r.nav_max_ms;
     const required = v.dvRequiredMs + extra;
     v.dvMargin = (v.dvAvailMs - required) / required;
     const covered = v.dvAvailMs >= required;
+    navLost = !covered;
     early.push({
       id: "nav-error",
       title: "Dice roll: navigation surprise",
@@ -508,7 +521,7 @@ export function rollRisk(evaluation, ctx, rng = () => 1) {
       term: "solar-array",
     });
   }
-  return { evaluation: { ...evaluation, values: v }, early, late };
+  return { evaluation: { ...evaluation, values: v, ok: evaluation.ok && !navLost }, early, late };
 }
 
 export function seededRng(seed) {

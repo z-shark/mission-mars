@@ -760,8 +760,8 @@ function reportHtml(result, lost) {
   const diagnosis = bad.length
     ? `<div class="diagnosis"><b>What held you back</b><ul>${bad.map((c) => `<li class="${c.status}">${c.detail}</li>`).join("")}</ul></div>`
     : `<div class="diagnosis ok"><b>All checks passed.</b></div>`;
-  const engine = v.dryKg - ctx.assumptions.spacecraft.bus_dry_kg - v.instrument.mass_kg - v.arrayMassKg;
-  const mass = bar("Launch mass (kg)", [["Body", ctx.assumptions.spacecraft.bus_dry_kg], ["Instruments", v.instrument.mass_kg], ["Engine system", engine], ["Panels", v.arrayMassKg], ["Fuel", v.propellantKg]].filter(([, x]) => x > 0), Math.max(v.capKg * 1.15, v.wetKg * 1.05), "kg", v.capKg);
+  const engine = v.dryKg - ctx.assumptions.spacecraft.bus_dry_kg - v.instrument.mass_kg - v.arrayMassKg - v.carriedKg - v.dishKg;
+  const mass = bar("Launch mass (kg)", [["Body", ctx.assumptions.spacecraft.bus_dry_kg], ["Instruments", v.instrument.mass_kg], ["Engine system", engine], ["Panels", v.arrayMassKg], ["Carried lander", v.carriedKg], ["Radio antenna", v.dishKg], ["Fuel", v.propellantKg]].filter(([, x]) => x > 0), Math.max(v.capKg * 1.15, v.wetKg * 1.05), "kg", v.capKg);
   const dv = bar("Speed change (m/s)", [["Fuel gives", Math.max(0, v.dvAvailMs ?? 0)]], Math.max(v.dvRequiredMs, v.dvAvailMs ?? 0) * 1.15, "m/s", v.dvRequiredMs, "needed");
   const cr = bar("Credits", v.creditParts, Math.max(v.mission?.budget_credits ?? 0, v.creditsSpent) * 1.1, "credits", v.mission?.budget_credits, "budget");
   const power = isEng() ? bar("Electric power at Mars (W)", [["Supply", v.powerSupplyW]], Math.max(v.powerSupplyW, v.powerDemandW) * 1.2, "W", v.powerDemandW, "needed") : "";
@@ -957,7 +957,6 @@ async function launch() {
     if (at > 0 && !risk.early.some((e) => e.outcome === "lost")) events.splice(at, 0, ...risk.late);
   }
   const lost = events.some((e) => e.outcome === "lost");
-  const cadet = true;
   const progress = missionProgress(result, currentMission());
   lastRun = seed === null ? null : { seed, requirements: progress.goals.map((g) => ({ text: g.text, met: g.met })), events: events.map((e) => ({ title: e.title, outcome: e.outcome })) };
   const n = progress.stars;
@@ -980,9 +979,9 @@ async function launch() {
   const real = texts.realMissions
     .map((m) => `<p>${m.text} <a href="${m.source}" target="_blank" rel="noopener">NASA</a></p>`)
     .join("");
-  const scoreLine = cadet ? `<p class="score">${K.score}: <b>${progress.score}</b></p>` : "";
-  const recap = cadet ? `<div class="goals recap"><h3>${K.goals}</h3><ul>${progress.goals.map((g) => `<li class="${g.met ? "met" : ""}"><span class="goal-star">${reqMode ? (g.met ? "✓" : "✕") : g.met ? "★" : "☆"}</span> ${g.text}</li>`).join("")}<li class="${progress.bonus.met ? "met" : ""}"><span class="goal-star">🪙</span> ${progress.bonus.text}</li></ul></div>` : "";
-  const headline = reqMode ? (lost ? texts.result.fail : n === progress.goals.length ? "All requirements met" : "Mission flown: not all requirements met") : lost ? texts.result.fail : cadet && !progress.requiredMet ? texts.result.partial : texts.result.win;
+  const scoreLine = `<p class="score">${K.score}: <b>${progress.score}</b></p>`;
+  const recap = `<div class="goals recap"><h3>${K.goals}</h3><ul>${progress.goals.map((g) => `<li class="${g.met ? "met" : ""}"><span class="goal-star">${reqMode ? (g.met ? "✓" : "✕") : g.met ? "★" : "☆"}</span> ${g.text}</li>`).join("")}<li class="${progress.bonus.met ? "met" : ""}"><span class="goal-star">🪙</span> ${progress.bonus.text}</li></ul></div>`;
+  const headline = reqMode ? (lost ? texts.result.fail : n === progress.goals.length ? "All requirements met" : "Mission flown: not all requirements met") : lost ? texts.result.fail : !progress.requiredMet ? texts.result.partial : texts.result.win;
   const nextProfile = { cadet: "explorer", explorer: "engineer", engineer: "analyst" }[state.profile];
   const next = nextProfile && !lost ? `<button class="launch secondary" id="nextLevel">${K.nextLevel}</button>` : "";
   const list = missionsFor(ctx.assumptions, state.profile);
@@ -1012,7 +1011,7 @@ async function launch() {
   if (!reduce) {
     sequenceRunning = true;
     await playSequence(result, events, stop);
-    sequenceRunning = false;
+    if (token === sequenceToken) sequenceRunning = false;
   }
   if (token !== sequenceToken) return;
   $("stage").hidden = true;

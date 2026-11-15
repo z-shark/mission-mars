@@ -105,7 +105,7 @@ export function makeEphemeris(samples) {
   });
 
   function locate(ms) {
-    if (ms < times[0] || ms > times[times.length - 1]) {
+    if (!Number.isFinite(ms) || ms < times[0] || ms > times[times.length - 1]) {
       return null;
     }
     let lo = 0;
