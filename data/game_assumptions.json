@@ -1,0 +1,1098 @@
+{
+  "note": "Illustrative game values. They are NOT NASA data. Each is a design choice made to keep the game readable; real missions differ. The interface says so.",
+  "spacecraft": {
+    "bus_dry_kg": 25,
+    "bus_power_w": 20,
+    "array_mass_kg_per_m2": 2.0,
+    "chemical_system_dry_kg": 5,
+    "electric_system_dry_kg": 3.0,
+    "base_cost_credits": 20,
+    "tank_cost_credits": 4,
+    "ops_credit_per_month": 1
+  },
+  "instruments": [
+    {
+      "id": "dust_sensor",
+      "label": "Dust sensor",
+      "mass_kg": 2,
+      "power_w": 5,
+      "science_per_month": 1.0,
+      "cost_credits": 8,
+      "data_gbit_per_month": 0.05
+    },
+    {
+      "id": "camera",
+      "label": "Camera",
+      "mass_kg": 3,
+      "power_w": 8,
+      "science_per_month": 1.5,
+      "cost_credits": 12,
+      "data_gbit_per_month": 5.0
+    },
+    {
+      "id": "relay_radio",
+      "label": "Relay radio",
+      "mass_kg": 4,
+      "power_w": 12,
+      "science_per_month": 1.2,
+      "cost_credits": 10,
+      "data_gbit_per_month": 4.0
+    },
+    {
+      "id": "thermometer",
+      "label": "Temperature sensor",
+      "mass_kg": 1,
+      "power_w": 3,
+      "science_per_month": 0.8,
+      "cost_credits": 6,
+      "data_gbit_per_month": 0.05
+    },
+    {
+      "id": "magnetometer",
+      "label": "Magnetic sensor",
+      "mass_kg": 2,
+      "power_w": 4,
+      "science_per_month": 1.0,
+      "cost_credits": 9,
+      "data_gbit_per_month": 0.1
+    },
+    {
+      "id": "radiation_sensor",
+      "label": "Radiation sensor",
+      "mass_kg": 2,
+      "power_w": 5,
+      "science_per_month": 1.1,
+      "cost_credits": 11,
+      "data_gbit_per_month": 0.1
+    }
+  ],
+  "mission": {
+    "tcm_delta_v_ms": 50,
+    "tcm_reference": "Order of magnitude only: the MarCO propulsion system had 755 N-s total impulse (SOA2026 Table 4-5 row VACCO MiPS)",
+    "orbit_altitude_km": 300,
+    "max_capture_burn_hours": 12,
+    "durations_months": {
+      "short": 2,
+      "medium": 6,
+      "long": 12
+    },
+    "min_contact_fraction": 0.9,
+    "explorer_window_search": [
+      "2028-10-01",
+      "2029-03-31"
+    ]
+  },
+  "scoring": {
+    "stars_science_target": 6,
+    "dv_margin_good_min": 0.05,
+    "dv_margin_good_max": 0.4
+  },
+  "missions": [
+    {
+      "id": "tiny",
+      "title": "First orbit",
+      "short": "Circle Mars and photograph it.",
+      "goal": "orbit",
+      "duration": "medium",
+      "budget_credits": 60,
+      "letter": "Welcome to the team! Our first job is simple: send a spacecraft to circle Mars and take pictures of the surface. Slowing down at Mars takes a lot of fuel, so plan carefully. Anything extra is a bonus, if it fits in the budget.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        },
+        {
+          "id": "dust",
+          "required": false
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Take pictures of the surface"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "credits_left_min",
+              "n": 5
+            }
+          ],
+          "text": "Take the pictures and save at least 5 credits"
+        }
+      ],
+      "thrifty_credits": 12,
+      "level": "Easy"
+    },
+    {
+      "id": "dust",
+      "title": "Dust watch",
+      "short": "Fly past Mars and measure its dust.",
+      "goal": "flyby",
+      "duration": "medium",
+      "budget_credits": 60,
+      "letter": "Hello from the science team! We want to know how much dust floats in the air of Mars. A camera would be nice too, if there is room. Can you fly past Mars and find out?",
+      "questions": [
+        {
+          "id": "dust",
+          "required": true
+        },
+        {
+          "id": "surface",
+          "required": false
+        }
+      ],
+      "event": {
+        "title": "A dust storm at Mars",
+        "instrument": "dust_sensor",
+        "with": "A dust storm covers part of Mars just as you arrive. Your dust sensor measures it. The scientists are thrilled.",
+        "without": "A dust storm covers part of Mars just as you arrive. You have no dust sensor, so the chance is missed."
+      },
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Reach Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Answer the dust question"
+        },
+        {
+          "type": "answers_all",
+          "text": "Answer both questions"
+        }
+      ],
+      "thrifty_credits": 20,
+      "level": "Easy"
+    },
+    {
+      "id": "scouts",
+      "title": "Landing scouts",
+      "short": "Prepare the way for a lander.",
+      "goal": "orbit",
+      "duration": "medium",
+      "budget_credits": 68,
+      "letter": "A lander will touch down on Mars soon. We need a good look at the surface, and a way for the lander to talk to Earth. Dust data would be a bonus, but the budget is tight.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        },
+        {
+          "id": "relay",
+          "required": true
+        },
+        {
+          "id": "dust",
+          "required": false
+        }
+      ],
+      "event": {
+        "title": "Message test",
+        "instrument": "relay_radio",
+        "with": "Earth sends a test message through your relay radio. It reaches Mars and comes back. The future lander will be able to talk to Earth.",
+        "without": "Earth wanted to test a message through a relay, but you took no radio. The lander will have to wait for another spacecraft."
+      },
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Answer both main questions"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "dv_margin_between",
+              "min": 0.05,
+              "max": 0.4
+            }
+          ],
+          "text": "Answer both main questions and keep a little spare fuel"
+        }
+      ],
+      "thrifty_credits": 10,
+      "level": "Medium"
+    },
+    {
+      "id": "crew",
+      "title": "Future crew",
+      "short": "Check the place for people.",
+      "goal": "orbit",
+      "duration": "medium",
+      "budget_credits": 66,
+      "letter": "One day people may travel to Mars. Before that we must know how much radiation reaches Mars and how cold the air is. Pictures to choose a base site would be a bonus. The budget is limited.",
+      "questions": [
+        {
+          "id": "radiation",
+          "required": true
+        },
+        {
+          "id": "temperature",
+          "required": true
+        },
+        {
+          "id": "surface",
+          "required": false
+        }
+      ],
+      "thrifty_credits": 13,
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Answer the two main questions"
+        },
+        {
+          "type": "answers_all",
+          "text": "Answer all three questions"
+        }
+      ],
+      "level": "Medium"
+    },
+    {
+      "id": "site",
+      "title": "Landing site",
+      "short": "Read the letter carefully.",
+      "goal": "flyby",
+      "duration": "medium",
+      "budget_credits": 50,
+      "hide_questions": true,
+      "letter": "We must choose where the next lander will touch down. For that we need pictures of the ground from above. We also worry that thick dust in the air could cover the lander's solar panels, so we must know how dusty it is. Passing messages home is not our problem this time.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        },
+        {
+          "id": "dust",
+          "required": true
+        },
+        {
+          "id": "relay",
+          "required": false
+        }
+      ],
+      "thrifty_credits": 6,
+      "event": {
+        "title": "A dusty day at Mars",
+        "instrument": "dust_sensor",
+        "with": "As you fly by, your dust sensor reads a thick haze over the landing area. The scientists now know to plan for dust on the panels.",
+        "without": "As you fly by, a thick haze hangs over the landing area. You cannot measure it, so the scientists are still guessing."
+      },
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Reach Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Answer what the scientists need"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "credits_left_min",
+              "n": 6
+            }
+          ],
+          "text": "Answer it and keep at least 6 credits"
+        }
+      ],
+      "level": "Hard"
+    },
+    {
+      "id": "field",
+      "title": "Magnetic mystery",
+      "short": "Read the letter, find the clue.",
+      "goal": "flyby",
+      "duration": "medium",
+      "budget_credits": 52,
+      "hide_questions": true,
+      "letter": "Earth is protected by a magnetic field. We wonder whether Mars has one too. We also want to know if its air is cold or warm. Pictures of the ground would be nice, if the budget allows.",
+      "questions": [
+        {
+          "id": "magnetic",
+          "required": true
+        },
+        {
+          "id": "temperature",
+          "required": true
+        },
+        {
+          "id": "surface",
+          "required": false
+        }
+      ],
+      "thrifty_credits": 9,
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Reach Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Answer what the scientists need"
+        },
+        {
+          "type": "answers_all",
+          "text": "Answer everything they wondered about"
+        }
+      ],
+      "level": "Hard"
+    }
+  ],
+  "questions": {
+    "dust": {
+      "text": "How much dust floats in the air of Mars?",
+      "instrument": "dust_sensor",
+      "answer": "The dust sensor counted the dust above Mars."
+    },
+    "surface": {
+      "text": "What does the surface of Mars look like from above?",
+      "instrument": "camera",
+      "answer": "The camera sent home pictures of the surface."
+    },
+    "relay": {
+      "text": "Can a future lander send its messages home through your spacecraft?",
+      "instrument": "relay_radio",
+      "answer": "The relay radio can pass messages between Mars and Earth. In 2018 the MarCO twins did this for the InSight lander."
+    },
+    "temperature": {
+      "text": "How cold is the air on Mars?",
+      "instrument": "thermometer",
+      "answer": "The temperature sensor measured how cold the air is."
+    },
+    "magnetic": {
+      "text": "Does Mars have a magnetic field?",
+      "instrument": "magnetometer",
+      "answer": "The magnetic sensor measured the magnetic field around Mars."
+    },
+    "radiation": {
+      "text": "How much space radiation reaches Mars?",
+      "instrument": "radiation_sensor",
+      "answer": "The radiation sensor measured the radiation around Mars."
+    }
+  },
+  "engineer_costs": {
+    "vehicle": {
+      "electron_photon": 0,
+      "ariane_62": 30,
+      "ariane_64": 50
+    },
+    "engine": {
+      "chemical": 0,
+      "electric": 12
+    },
+    "array_per_m2": 8,
+    "band": {
+      "s_band": 0,
+      "x_band": 4,
+      "ka_band": 10
+    }
+  },
+  "explorer_missions": [
+    {
+      "id": "season",
+      "title": "Dust and cold",
+      "short": "Watch a whole year.",
+      "level": "Medium",
+      "goal": "orbit",
+      "duration": "medium",
+      "budget_credits": 78,
+      "ops_cost": true,
+      "min_months": 12,
+      "thrifty_credits": 14,
+      "letter": "We need to watch how dust and temperature change on Mars over a long time. A short look is not enough: we need at least 12 months of data. Pictures would be a bonus. Remember that every month of watching costs a credit.",
+      "questions": [
+        {
+          "id": "dust",
+          "required": true
+        },
+        {
+          "id": "temperature",
+          "required": true
+        },
+        {
+          "id": "surface",
+          "required": false
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Answer the two main questions"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "min_months",
+              "n": 12
+            },
+            {
+              "type": "dv_margin_between",
+              "min": 0.05,
+              "max": 0.4
+            }
+          ],
+          "text": "Watch for 12 months and keep a little spare fuel"
+        }
+      ],
+      "mass_cap_kg": 95,
+      "lesson": "how the length of observation trades against cost. Every month of running the mission costs credits, and some instruments need more power.",
+      "takeaway": "A long observation needs a spacecraft that keeps working: more months mean more credits and more electricity. The best design is not the longest one but the cheapest one that still meets what the scientists asked."
+    },
+    {
+      "id": "rover",
+      "title": "Relay for a rover",
+      "short": "Help a rover talk to Earth.",
+      "level": "Medium",
+      "goal": "orbit",
+      "duration": "medium",
+      "budget_credits": 84,
+      "ops_cost": true,
+      "min_months": 6,
+      "thrifty_credits": 15,
+      "letter": "A rover will soon drive on Mars and needs a spacecraft overhead to pass its messages to Earth. We also want pictures to plan its route. We need at least six months of service. Dust data would be nice but is not essential.",
+      "questions": [
+        {
+          "id": "relay",
+          "required": true
+        },
+        {
+          "id": "surface",
+          "required": true
+        },
+        {
+          "id": "dust",
+          "required": false
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Take the radio and the camera"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "min_months",
+              "n": 6
+            },
+            {
+              "type": "credits_left_min",
+              "n": 10
+            }
+          ],
+          "text": "Serve for 6 months and save at least 10 credits"
+        }
+      ],
+      "mass_cap_kg": 95,
+      "lesson": "why relay spacecraft carry radio hardware as their main payload, and how camera and radio compete for the budget.",
+      "takeaway": "A relay orbiter earns its keep by passing a rover's data to Earth. Its radio is its payload, so it is chosen first and the rest of the design is built around it."
+    },
+    {
+      "id": "hunt",
+      "title": "Magnetic hunt",
+      "short": "Find out what the letter asks.",
+      "level": "Hard",
+      "goal": "orbit",
+      "duration": "medium",
+      "budget_credits": 70,
+      "ops_cost": true,
+      "min_months": 6,
+      "hide_questions": true,
+      "thrifty_credits": 6,
+      "letter": "Earth is protected from harmful space radiation partly by its magnetic field. We wonder whether Mars has any such shield, and how much radiation reaches it. How cold the air is would be good to know. We want at least six months of results.",
+      "questions": [
+        {
+          "id": "magnetic",
+          "required": true
+        },
+        {
+          "id": "radiation",
+          "required": true
+        },
+        {
+          "id": "temperature",
+          "required": false
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Answer what the scientists need"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "min_months",
+              "n": 6
+            },
+            {
+              "type": "dv_margin_between",
+              "min": 0.05,
+              "max": 0.4
+            }
+          ],
+          "text": "Observe for 6 months and keep a little spare fuel"
+        }
+      ],
+      "mass_cap_kg": 95,
+      "lesson": "how to match instruments to the questions in a letter when the questions are not listed.",
+      "takeaway": "The letter told you what was wanted without a list. Reading a request and turning it into the right instruments is the first job of a mission designer."
+    },
+    {
+      "id": "survey",
+      "title": "Grand survey",
+      "short": "Many questions, one year.",
+      "level": "Hard",
+      "goal": "orbit",
+      "duration": "long",
+      "budget_credits": 92,
+      "ops_cost": true,
+      "min_months": 12,
+      "hide_questions": true,
+      "thrifty_credits": 5,
+      "letter": "This is our big mission. We want to see what the surface looks like, know how dusty and how cold it is, and learn whether Mars has a magnetic field. We need a full year of observation. Passing messages home is not our concern.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        },
+        {
+          "id": "dust",
+          "required": true
+        },
+        {
+          "id": "temperature",
+          "required": true
+        },
+        {
+          "id": "magnetic",
+          "required": true
+        },
+        {
+          "id": "relay",
+          "required": false
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Answer all the scientists' questions"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "min_months",
+              "n": 12
+            },
+            {
+              "type": "credits_left_min",
+              "n": 5
+            }
+          ],
+          "text": "Observe for a year and save at least 5 credits"
+        }
+      ],
+      "mass_cap_kg": 95,
+      "lesson": "what happens to mass, power and cost when a spacecraft carries many instruments.",
+      "takeaway": "Every extra instrument adds mass, which needs more fuel, which adds more mass: the rocket equation makes extra weight grow faster than it looks."
+    }
+  ],
+  "engineer_missions": [
+    {
+      "id": "blind",
+      "title": "Behind the Sun",
+      "short": "Keep talking through a blackout.",
+      "level": "Hard",
+      "goal": "orbit",
+      "duration": "long",
+      "budget_credits": 85,
+      "ops_cost": true,
+      "min_months": 12,
+      "default_date": "2028-12-06",
+      "thrifty_credits": 14,
+      "letter": "We plan a full year of observation. During that year Mars will pass almost behind the Sun as seen from Earth, and the radio signal will be disturbed for a while. Pictures of the surface are what we need. Choose the radio band carefully.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        },
+        {
+          "id": "dust",
+          "required": false
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Take pictures of the surface"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "min_months",
+              "n": 12
+            },
+            {
+              "type": "contact_min",
+              "value": 0.97
+            }
+          ],
+          "text": "Watch for a year with almost no lost contact"
+        }
+      ],
+      "analyst": true,
+      "lesson": "why the radio band matters. Near solar conjunction the Sun blocks signals, and a higher band keeps working closer to the Sun.",
+      "takeaway": "Higher radio bands keep working closer to the Sun, so fewer days are lost, but they cost more credits. Choosing the band is a trade between lost days and cost."
+    },
+    {
+      "id": "gentle",
+      "title": "Gentle push",
+      "short": "Fly past with a light spacecraft.",
+      "level": "Hard",
+      "goal": "flyby",
+      "duration": "medium",
+      "budget_credits": 60,
+      "ops_cost": false,
+      "default_date": "2028-12-06",
+      "thrifty_credits": 9,
+      "letter": "We need a very light spacecraft to fly past Mars and take pictures. Weight matters more than anything. The electric engine is much lighter than a tank of chemical fuel, but it needs a lot of electricity and pushes very gently.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        },
+        {
+          "id": "temperature",
+          "required": false
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Reach Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Take pictures of the surface"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "max_mass_kg",
+              "kg": 36
+            }
+          ],
+          "text": "Take the pictures with a spacecraft under 36 kg"
+        }
+      ],
+      "analyst": true,
+      "lesson": "how electric engines trade thrust for efficiency. They save mass but need a lot of electricity and are far too weak to brake into orbit.",
+      "takeaway": "An electric engine cannot brake into Mars orbit in a reasonable time because its thrust is tiny, but for a flyby it can save weight, provided the panels can power it.",
+      "start": {
+        "propellantKg": 3,
+        "arrayAreaM2": 0.5
+      }
+    },
+    {
+      "id": "window",
+      "title": "Best window",
+      "short": "Pick the launch date wisely.",
+      "level": "Hard",
+      "goal": "orbit",
+      "duration": "medium",
+      "budget_credits": 70,
+      "ops_cost": true,
+      "default_date": "2027-06-01",
+      "thrifty_credits": 18,
+      "letter": "Mars is an easier target at some times than at others. If you launch at a bad time, braking at Mars needs much more fuel. We want pictures and the lightest spacecraft you can manage. Look for the best launch window in the chart. Good dates come back about every 26 months, which is how often Earth catches up with Mars; in our NASA JPL data the dips are in December 2028, January 2031 and March 2033.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        },
+        {
+          "id": "dust",
+          "required": false
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Take pictures of the surface"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "max_mass_kg",
+              "kg": 70
+            }
+          ],
+          "text": "Take the pictures with a spacecraft under 70 kg"
+        }
+      ],
+      "analyst": true,
+      "lesson": "why the launch date matters. The same trip needs far more fuel at a bad time.",
+      "takeaway": "The fuel needed changes several times from one launch window to the next because Earth and Mars must be in the right places at the right times."
+    },
+    {
+      "id": "taxi",
+      "title": "Lander taxi",
+      "short": "Carry a lander to Mars.",
+      "level": "Hard",
+      "goal": "orbit",
+      "duration": "short",
+      "budget_credits": 150,
+      "ops_cost": true,
+      "fixed_payload_kg": 120,
+      "default_date": "2028-12-06",
+      "thrifty_credits": 10,
+      "letter": "A 120 kg lander must be carried to Mars orbit, where it will separate and go down to the surface. Your spacecraft has to carry it there, so everything gets heavy. Check what the smallest launch vehicle can lift. We also want pictures.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "Get the lander into orbit around Mars"
+        },
+        {
+          "type": "answers_required",
+          "text": "Take pictures of the surface"
+        },
+        {
+          "type": "all",
+          "of": [
+            {
+              "type": "answers_required"
+            },
+            {
+              "type": "dv_margin_between",
+              "min": 0.05,
+              "max": 0.4
+            }
+          ],
+          "text": "Take pictures and keep a little spare fuel"
+        }
+      ],
+      "analyst": true,
+      "lesson": "why big rockets exist. Heavy cargo needs heavy fuel, so a small rocket cannot lift it.",
+      "takeaway": "With 2134 m/s to brake and a 300 s engine the wet mass is about 2.07 times the dry mass, so each extra kilogram of cargo needs about one more kilogram of fuel.",
+      "start": {
+        "propellantKg": 160
+      }
+    }
+  ],
+  "risk": {
+    "nav_probability": 0.3,
+    "nav_max_ms": 120,
+    "storm_probability": 0.25,
+    "storm_power_cut": 0.4
+  },
+  "explorer_dates": [
+    {
+      "date": "2028-10-15",
+      "label": "Mid-October 2028",
+      "hint": "A little early: the trip is longer."
+    },
+    {
+      "date": "2028-12-06",
+      "label": "Early December 2028",
+      "hint": "Close to the best window."
+    },
+    {
+      "date": "2029-03-01",
+      "label": "March 2029",
+      "hint": "Late: Mars has moved on."
+    }
+  ],
+  "panel_options": [
+    {
+      "area": 0.2,
+      "label": "Small"
+    },
+    {
+      "area": 0.3,
+      "label": "Medium"
+    },
+    {
+      "area": 0.5,
+      "label": "Large"
+    },
+    {
+      "area": 1.0,
+      "label": "Extra large"
+    }
+  ],
+  "explorer_date_range": [
+    "2028-09-01",
+    "2029-05-01"
+  ],
+  "analyst_missions": [
+    {
+      "id": "climate",
+      "title": "AN-1 Climate watch",
+      "short": "Dust and temperature for a year.",
+      "level": "Hard",
+      "analyst": true,
+      "goal": "orbit",
+      "duration": "long",
+      "budget_credits": 76,
+      "ops_cost": true,
+      "min_months": 12,
+      "thrifty_credits": 6,
+      "default_date": "2028-12-06",
+      "mass_cap_kg": 85,
+      "letter": "Requirements: observe dust and air temperature from Mars orbit for a full year with reliable contact, an orbit that does not waste fuel, and enough power to survive a dust storm.",
+      "questions": [
+        {
+          "id": "dust",
+          "required": true
+        },
+        {
+          "id": "temperature",
+          "required": true
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "R1 Capture into Mars orbit"
+        },
+        {
+          "type": "answers_required",
+          "text": "R2 Dust and temperature instruments on board"
+        },
+        {
+          "type": "min_months",
+          "n": 12,
+          "text": "R3 Science duration at least 12 months"
+        },
+        {
+          "type": "contact_min",
+          "value": 0.97,
+          "text": "R4 Contact available at least 97% of science time"
+        },
+        {
+          "type": "dv_margin_min",
+          "value": 0.1,
+          "text": "R5 Fuel reserve at least 10%"
+        },
+        {
+          "type": "power_margin_min",
+          "value": 0.4,
+          "text": "R6 Power margin at least 40% (dust storm proof)"
+        },
+        {
+          "type": "max_mass_kg",
+          "kg": 85,
+          "text": "R7 Launch mass at most 85 kg"
+        },
+        {
+          "type": "chance_min",
+          "value": 0.9,
+          "text": "R8 Chance of a smooth mission at least 90%"
+        },
+        {
+          "type": "data_margin_min",
+          "value": 0.0,
+          "text": "R9 Radio link returns all the data the instruments collect"
+        }
+      ],
+      "lesson": "how margins work. A design that only just passes can fail in a dust storm, so engineers carry extra fuel and extra power.",
+      "takeaway": "Requirements are tests, margins are the room you keep for surprises. A design with healthy margins in fuel and power usually has a high chance of a smooth mission."
+    },
+    {
+      "id": "mapper",
+      "title": "AN-2 Mapping orbiter",
+      "short": "Pictures from a low orbit.",
+      "level": "Hard",
+      "analyst": true,
+      "goal": "orbit",
+      "duration": "medium",
+      "budget_credits": 72,
+      "ops_cost": true,
+      "min_months": 6,
+      "thrifty_credits": 6,
+      "default_date": "2028-12-06",
+      "mass_cap_kg": 75,
+      "letter": "Requirements: map the surface in sharp detail, which needs a low closest point, but a circular low orbit is expensive in fuel. Find a good elliptical orbit.",
+      "questions": [
+        {
+          "id": "surface",
+          "required": true
+        }
+      ],
+      "stars": [
+        {
+          "type": "reach",
+          "text": "R1 Capture into Mars orbit"
+        },
+        {
+          "type": "answers_required",
+          "text": "R2 Camera on board"
+        },
+        {
+          "type": "max_periapsis_km",
+          "km": 200,
+          "text": "R3 Closest point at most 200 km above the surface (resolution)"
+        },
+        {
+          "type": "period_hours_between",
+          "min": 3,
+          "max": 8,
+          "text": "R4 Orbit period between 3 and 8 hours"
+        },
+        {
+          "type": "min_months",
+          "n": 6,
+          "text": "R5 Science duration at least 6 months"
+        },
+        {
+          "type": "dv_margin_min",
+          "value": 0.08,
+          "text": "R6 Fuel reserve at least 8%"
+        },
+        {
+          "type": "max_mass_kg",
+          "kg": 70,
+          "text": "R7 Launch mass at most 70 kg"
+        },
+        {
+          "type": "chance_min",
+          "value": 0.8,
+          "text": "R8 Chance of a smooth mission at least 80%"
+        },
+        {
+          "type": "data_margin_min",
+          "value": 0.0,
+          "text": "R9 Radio link returns all the data the instruments collect"
+        }
+      ],
+      "lesson": "how an elongated orbit saves fuel but makes each lap longer. Sharp pictures need a low closest point.",
+      "takeaway": "An elongated orbit needs less braking fuel than a low circle, but each lap takes longer (Kepler's third law). The closest point decides picture sharpness, the farthest point decides the period."
+    }
+  ],
+  "link": {
+    "antenna_efficiency": 0.55,
+    "other_losses_db": 2.0,
+    "required_ebn0_db": 2.0,
+    "amp_efficiency": 0.3,
+    "contact_hours_per_day": 8,
+    "dishes": [
+      {
+        "diameter_m": 0.3,
+        "mass_kg": 0.5,
+        "cost_credits": 2
+      },
+      {
+        "diameter_m": 0.6,
+        "mass_kg": 1.5,
+        "cost_credits": 5
+      },
+      {
+        "diameter_m": 1.0,
+        "mass_kg": 4,
+        "cost_credits": 10
+      },
+      {
+        "diameter_m": 1.5,
+        "mass_kg": 8,
+        "cost_credits": 18
+      }
+    ],
+    "tx_powers": [
+      {
+        "watts": 4,
+        "cost_credits": 0
+      },
+      {
+        "watts": 10,
+        "cost_credits": 3
+      },
+      {
+        "watts": 20,
+        "cost_credits": 8
+      }
+    ]
+  }
+}

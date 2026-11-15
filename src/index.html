@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mission: Mars</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1 id="title"></h1>
+  <div class="tagrow"><p id="tagline"></p><button id="dataBadge" class="data-badge" type="button"></button></div>
+  <nav id="profiles" aria-label="Profile"></nav>
+</header>
+<details id="howto" open><summary>How to play</summary><div id="howtoBody"></div></details>
+<main id="app">
+  <section id="setup" aria-label="Design"></section>
+  <section id="forecast-panel" aria-label="Forecast"></section>
+</main>
+<section id="result" hidden></section>
+<dialog id="term-dialog"></dialog>
+<footer id="note"></footer>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

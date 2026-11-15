@@ -1,0 +1,141 @@
+{
+ "source": "NASA Marshall Solar Cycle Forecast, 13-month smoothed sunspot number, issued November 2026",
+ "source_url": "https://www.nasa.gov/wp-content/uploads/2026/11/nov2026ssn-prd.txt",
+ "raw_file": "data/raw/nasa_marshall_ssn_forecast_nov2026.txt",
+ "level_rule": {
+  "low_below": 30.0,
+  "high_from": 70.0,
+  "basis": "game assumption applied to the median forecast"
+ },
+ "built_utc": "2026-11-14T10:33:34+00:00",
+ "years": [
+  {
+   "year": 2026,
+   "months": 8,
+   "ssn_p95": 96.5,
+   "ssn_median": 79.9,
+   "ssn_p05": 68.0,
+   "level": "high"
+  },
+  {
+   "year": 2027,
+   "months": 12,
+   "ssn_p95": 95.5,
+   "ssn_median": 58.4,
+   "ssn_p05": 33.0,
+   "level": "medium"
+  },
+  {
+   "year": 2028,
+   "months": 12,
+   "ssn_p95": 71.8,
+   "ssn_median": 36.8,
+   "ssn_p05": 14.5,
+   "level": "medium"
+  },
+  {
+   "year": 2029,
+   "months": 12,
+   "ssn_p95": 42.5,
+   "ssn_median": 21.7,
+   "ssn_p05": 0.2,
+   "level": "low"
+  },
+  {
+   "year": 2030,
+   "months": 12,
+   "ssn_p95": 21.6,
+   "ssn_median": 9.2,
+   "ssn_p05": 0.4,
+   "level": "low"
+  },
+  {
+   "year": 2031,
+   "months": 12,
+   "ssn_p95": 37.9,
+   "ssn_median": 16.8,
+   "ssn_p05": 3.8,
+   "level": "low"
+  },
+  {
+   "year": 2032,
+   "months": 12,
+   "ssn_p95": 135.2,
+   "ssn_median": 57.6,
+   "ssn_p05": 11.0,
+   "level": "medium"
+  },
+  {
+   "year": 2033,
+   "months": 12,
+   "ssn_p95": 223.6,
+   "ssn_median": 118.8,
+   "ssn_p05": 25.9,
+   "level": "high"
+  },
+  {
+   "year": 2034,
+   "months": 12,
+   "ssn_p95": 268.7,
+   "ssn_median": 155.4,
+   "ssn_p05": 43.7,
+   "level": "high"
+  },
+  {
+   "year": 2035,
+   "months": 12,
+   "ssn_p95": 253.8,
+   "ssn_median": 156.0,
+   "ssn_p05": 72.1,
+   "level": "high"
+  },
+  {
+   "year": 2036,
+   "months": 12,
+   "ssn_p95": 214.6,
+   "ssn_median": 136.8,
+   "ssn_p05": 71.5,
+   "level": "high"
+  },
+  {
+   "year": 2037,
+   "months": 12,
+   "ssn_p95": 161.1,
+   "ssn_median": 106.5,
+   "ssn_p05": 50.4,
+   "level": "high"
+  },
+  {
+   "year": 2038,
+   "months": 12,
+   "ssn_p95": 115.1,
+   "ssn_median": 74.5,
+   "ssn_p05": 31.2,
+   "level": "high"
+  },
+  {
+   "year": 2039,
+   "months": 12,
+   "ssn_p95": 84.3,
+   "ssn_median": 49.0,
+   "ssn_p05": 12.9,
+   "level": "medium"
+  },
+  {
+   "year": 2040,
+   "months": 12,
+   "ssn_p95": 55.5,
+   "ssn_median": 29.2,
+   "ssn_p05": 5.6,
+   "level": "low"
+  },
+  {
+   "year": 2041,
+   "months": 10,
+   "ssn_p95": 29.1,
+   "ssn_median": 13.9,
+   "ssn_p05": 0.9,
+   "level": "low"
+  }
+ ]
+}

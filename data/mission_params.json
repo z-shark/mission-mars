@@ -1,0 +1,370 @@
+{
+  "status": "partial: only values with a recorded source are filled; null means not yet sourced",
+  "trl_mapping": {
+    "source_id": "SOA2026",
+    "classes": {
+      "C": {
+        "name": "Concept",
+        "trl": [
+          1,
+          3
+        ]
+      },
+      "D": {
+        "name": "In-Development",
+        "trl": [
+          4,
+          5
+        ]
+      },
+      "E": {
+        "name": "Engineering-to-Flight",
+        "trl": [
+          5,
+          6
+        ]
+      },
+      "F": {
+        "name": "Flight-Demonstrated",
+        "trl": [
+          7,
+          9
+        ]
+      }
+    }
+  },
+  "conjunction": {
+    "source_id": "ASCEND-2022",
+    "angle_definition": "Sun-Earth-Mars angle with Earth at the vertex",
+    "thresholds_deg": {
+      "ka_band": 1.0,
+      "analysis_default": 2.0,
+      "x_band": 2.3,
+      "mro_moratorium": 3.0,
+      "s_band": 4.0
+    },
+    "mro_restrictions_below_deg": 5.0,
+    "table_data_file": "data/earth_mars_range.json"
+  },
+  "trl_descriptions": {
+    "source_id": "NASA-TRL",
+    "1": "Basic scientific research begins",
+    "2": "Basic principles studied, practical applications speculative",
+    "3": "Active research and design, proof-of-concept model",
+    "4": "Multiple components tested together",
+    "5": "Breadboard tested in environments as close to realistic as possible",
+    "6": "Fully functional prototype or representational model",
+    "7": "Prototype demonstrated in a space environment",
+    "8": "Tested and flight qualified",
+    "9": "Flight proven during a successful mission"
+  },
+  "constants": {
+    "speed_of_light_km_s": 299792.458,
+    "au_km": 149597870.7,
+    "g0_m_s2": 9.80665
+  },
+  "bodies": {
+    "source_ids": [
+      "NSSDC-SUN",
+      "NSSDC-EARTH",
+      "NSSDC-MARS"
+    ],
+    "sun_gm_km3_s2": 132712000000,
+    "earth_gm_km3_s2": 398600,
+    "mars_gm_km3_s2": 42828,
+    "earth_semimajor_axis_km": 149598000,
+    "mars_semimajor_axis_km": 227956000,
+    "mars_mean_radius_km": 3389.5,
+    "mars_synodic_period_days": 779.94,
+    "solar_irradiance_w_m2": {
+      "earth": 1361.0,
+      "mars": 586.2
+    }
+  },
+  "engines": {
+    "chemical": {
+      "label": "Bipropellant thruster (22 N class)",
+      "isp_s": 300,
+      "isp_range_s": [
+        290,
+        310
+      ],
+      "thrust_n": 22,
+      "pmi_class": "F",
+      "source_id": "SOA2026",
+      "source_ref": "Table 4-3, PDF page 126: Benchmark Space Systems Halcyon Avant, HTP plus fuel, thrust 2, 10 and 22 N, Isp 290-310 s, flown on Sherpa-TLC2",
+      "system_dry_mass_kg": null
+    },
+    "electric": {
+      "label": "RF gridded-ion thruster (iodine)",
+      "isp_s": 1960,
+      "thrust_mn": 1.0,
+      "power_w": 70,
+      "wet_mass_kg": 2.9,
+      "total_impulse_kn_s": 31.7,
+      "pmi_class": "E",
+      "source_id": "SOA2026",
+      "source_ref": "Table 4-9: Busek BIT-3, flown or planned on Lunar IceCube and LunaH-Map",
+      "thrust_n": 0.001,
+      "max_propellant_kg_from_total_impulse": 1.649
+    },
+    "chemical_monopropellant_reference": {
+      "label": "Green monopropellant thruster system",
+      "isp_s": 220,
+      "isp_range_s": [
+        195,
+        224
+      ],
+      "thrust_n": [
+        0.5,
+        1.0
+      ],
+      "pmi_class": "E",
+      "source_id": "SOA2026",
+      "source_ref": "Table 4-3: Moog Monopropellant Propulsion Module 224 s; Busek BGT-X5 220-225 s; NanoAvionics EPSS C2 220 s; ECAPS HPGP over 200 s",
+      "system_dry_mass_kg": null
+    }
+  },
+  "propulsion_ranges": {
+    "source_id": "SOA2026",
+    "source_ref": "Table 4-1",
+    "hydrazine_monopropellant": {
+      "thrust_n": [
+        0.25,
+        28
+      ],
+      "isp_s": [
+        180,
+        285
+      ]
+    },
+    "alternative_mono_bipropellant": {
+      "thrust_n": [
+        0.05,
+        22
+      ],
+      "isp_s": [
+        150,
+        310
+      ]
+    },
+    "gridded_ion": {
+      "thrust_mn": [
+        0.1,
+        20
+      ],
+      "isp_s": [
+        500,
+        3000
+      ]
+    },
+    "hall_effect": {
+      "thrust_mn": [
+        0.25,
+        55
+      ],
+      "isp_s": [
+        200,
+        1920
+      ]
+    }
+  },
+  "solar_cells": {
+    "source_id": "SOA2026",
+    "source_ref": "Table 3-1 solar cells",
+    "default": {
+      "name": "Rocket Lab ZTJ",
+      "bol_efficiency_pct": 29.5,
+      "pmp_w_per_m2": 397.7
+    },
+    "high_end": {
+      "name": "Boeing-Spectrolab XTE-SF",
+      "bol_efficiency_pct": 32.2,
+      "pmp_w_per_m2": 433.4
+    }
+  },
+  "deep_space_transponders": {
+    "source_id": "SOA2026",
+    "source_ref": "Table 5-11",
+    "iris_v2_1": {
+      "mass_kg": 1.1,
+      "power_w": 10.3,
+      "bands": [
+        "X",
+        "Ka",
+        "S",
+        "UHF"
+      ],
+      "rad_tolerance_krad": 25
+    },
+    "iris_v3": {
+      "mass_kg": 0.8,
+      "power_w": 10,
+      "bands": [
+        "X",
+        "Ka",
+        "S"
+      ],
+      "rad_tolerance_krad": 25
+    },
+    "sdst": {
+      "mass_kg": 3.2,
+      "power_w": 12.5,
+      "bands": [
+        "X",
+        "Ka"
+      ],
+      "rad_tolerance_krad": 50
+    }
+  },
+  "reference_missions": [
+    {
+      "name": "MarCO-A and MarCO-B (Mars Cube One)",
+      "launch": "2018-05-05",
+      "role": "Twin CubeSat communications relay for the InSight landing",
+      "facts": [
+        "Followed InSight to Mars in loose formation",
+        "Provided a real-time link to Earth during InSight entry, descent and landing on 2018-11-26",
+        "Deployable X-band reflectarray high-gain antennas and full-duplex UHF/X-band radios",
+        "Used Iris deep-space transponder",
+        "Micro CubeSat propulsion system with eight thrusters, 755 N-s total impulse, 3.49 kg wet mass"
+      ],
+      "source_id": "JPL-MARCO",
+      "secondary_source_id": "SOA2026",
+      "mass_kg": null,
+      "power_w": null,
+      "note": "Mass and power values differ between secondary sources and are not entered until a NASA primary document is found"
+    }
+  ],
+  "launch_vehicles": [
+    {
+      "id": "electron_photon",
+      "label": "Rocket Lab Electron with Photon bus",
+      "class": "small dedicated",
+      "max_spacecraft_payload_kg": 180,
+      "electron_leo_capacity_kg": 300,
+      "capacity_basis": "Photon bus payload mass available for LEO and beyond; no C3-specific figure published",
+      "source_id": "ROCKETLAB-2020",
+      "reliability": "weak: not specific to Mars-transfer energy"
+    },
+    {
+      "id": "ariane_62",
+      "label": "Ariane 62",
+      "class": "medium dedicated",
+      "escape_v_infinity_km_s": 2.5,
+      "escape_c3_km2_s2": 6.25,
+      "mass_to_escape_kg": 2600,
+      "source_id": "ARIANE6-MUA",
+      "source_ref": "Section 2.4.5 Earth escape missions, Issue 2 Revision 0, March 2021",
+      "reliability": "published at C3 6.25; Mars transfers can require higher C3, so treat as optimistic"
+    },
+    {
+      "id": "ariane_64",
+      "label": "Ariane 64",
+      "class": "heavy dedicated",
+      "escape_v_infinity_km_s": 2.5,
+      "escape_c3_km2_s2": 6.25,
+      "mass_to_escape_kg": 6900,
+      "source_id": "ARIANE6-MUA",
+      "source_ref": "Section 2.4.5 Earth escape missions, Issue 2 Revision 0, March 2021",
+      "reliability": "published at C3 6.25; Mars transfers can require higher C3, so treat as optimistic"
+    }
+  ],
+  "launch_vehicle_notes": {
+    "falcon": "SpaceX Falcon User's Guide (2025-05-09) states that Earth-escape services are available and that mass-to-orbit data is available upon request, so no figure can be cited",
+    "cost": "launch prices are not published in these sources; the game uses relative cost units"
+  },
+  "instruments": [],
+  "cost": {
+    "note": "No NASA source gives component or launch prices. Only mission totals from open sources are recorded; game budget units are game design, see game_assumptions.json",
+    "anchors": [
+      {
+        "id": "marco_total",
+        "value_usd_million": 18.5,
+        "label": "MarCO mission total",
+        "source_ids": [
+          "SPACENEWS-2020",
+          "PLANETARY-MARCO"
+        ]
+      },
+      {
+        "id": "insight_total",
+        "value_usd_million": 1000,
+        "label": "InSight lander, approximately",
+        "source_ids": [
+          "SPACENEWS-2020"
+        ]
+      },
+      {
+        "id": "esa_deep_space_cubesat_range",
+        "value_usd_million": [
+          10,
+          20
+        ],
+        "label": "ESA deep-space cubesat budgets",
+        "source_ids": [
+          "SPACENEWS-2020"
+        ]
+      }
+    ]
+  },
+  "margin_policy": {
+    "note": "CML-based contingency not yet sourced",
+    "by_cml": {}
+  },
+  "dsn": {
+    "source_id": "DSN-810-005-104Q",
+    "source_url": "https://deepspace.jpl.nasa.gov/dsndocs/810-005/104/104Q.pdf",
+    "station": "34-m beam waveguide antenna (DSS-34)",
+    "conditions": "gain at peak of the elevation curve, no atmosphere; noise temperature Top at zenith, 25 percent weather (CD=25%), clear",
+    "bands": {
+      "s_band": {
+        "frequency_ghz": 2.295,
+        "rx_gain_dbi": 56.74,
+        "system_noise_k": 27.79,
+        "note": "Table 5 gain; Table 9 Top non-diplexed S-band, HEMT-1"
+      },
+      "x_band": {
+        "frequency_ghz": 8.425,
+        "rx_gain_dbi": 68.29,
+        "system_noise_k": 21.25,
+        "note": "Table 7 gain (X/Ka operation); Table 9 Top X/Ka, HEMT-1, RCP, diplexed"
+      },
+      "ka_band": {
+        "frequency_ghz": 32.05,
+        "rx_gain_dbi": 79.0,
+        "system_noise_k": 33.93,
+        "note": "Table 7 gain; Table 9 Top Ka X/Ka, HEMT-1, RCP, non-diplexed"
+      }
+    }
+  },
+  "real_missions": [
+    {
+      "id": "mro",
+      "name": "Mars Reconnaissance Orbiter (2005)",
+      "launch": "2005-08-12",
+      "arrival": "2006-03-10",
+      "max_mass_kg": 2180,
+      "propellant_kg": 1149,
+      "braking_fuel_share": 0.7,
+      "orbit": null,
+      "source_id": "NSSDCA-MRO",
+      "source_url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2005-029A"
+    },
+    {
+      "id": "maven",
+      "name": "MAVEN (2013)",
+      "launch": "2013-11-18",
+      "arrival": "2014-09-22",
+      "max_mass_kg": null,
+      "propellant_kg": null,
+      "braking_fuel_share": null,
+      "orbit": {
+        "periapsis_km": 150,
+        "period_h": 4.5
+      },
+      "source_id": "NSSDCA-MAVEN",
+      "source_url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2013-063A"
+    }
+  ]
+}
