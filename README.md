@@ -6,7 +6,7 @@ Team: Tar Solo (one human and one AI assistant, Claude Code).
 
 ## Play online
 
-After GitHub Pages is switched on, the game opens at `https://z-shark.github.io/mission-mars/`.
+Play it in the browser, with no installation or account: https://z-shark.github.io/mission-mars/
 
 ## Download and run locally
 
